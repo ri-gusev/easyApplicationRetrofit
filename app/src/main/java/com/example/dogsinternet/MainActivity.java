@@ -6,6 +6,8 @@ import android.util.Log;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -36,8 +38,24 @@ public class MainActivity extends AppCompatActivity {
                     InputStream inputStream = urlConnection.getInputStream(); //побайтово
                     InputStreamReader inputStreamReader = new InputStreamReader(inputStream); //посимвольно
                     BufferedReader bufferedReader = new BufferedReader(inputStreamReader); //построчно
-                    String result = bufferedReader.readLine();
-                    Log.d("MainActivity", result);
+
+                    //тк string - иммутабельный мы используем StringBuilder и считываем json в Stringbuilder
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String result;
+                    do {
+                        result = bufferedReader.readLine();
+                        if (result != null){
+                            stringBuilder.append(result);
+                        }
+                    } while (result != null);
+
+                    JSONObject jsonObject = new JSONObject(stringBuilder.toString());
+                    String message = jsonObject.getString("message");
+                    String status = jsonObject.getString("status");
+
+                    DogImage dogImage = new DogImage(message, status);
+
+                    Log.d("MainActivity", dogImage.toString());
                 } catch (Exception e) {
                     Log.d("MainActivity", "incorrect url");
                 }

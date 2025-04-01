@@ -17,4 +17,12 @@ public class DogImage {
     public String getMessage() {
         return message;
     }
+
+    @Override
+    public String toString() {
+        return "DogImage{" +
+                "message='" + message + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }
