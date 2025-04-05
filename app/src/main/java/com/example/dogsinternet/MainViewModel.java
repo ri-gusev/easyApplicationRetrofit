@@ -93,33 +93,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     private Single<DogImage> loadImageRx(){
-        return Single.fromCallable(new Callable<DogImage>() {
-            @Override
-            public DogImage call() throws Exception {
-
-                URL url = new URL(BASE_URL);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                InputStream inputStream = urlConnection.getInputStream(); //побайтово
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream); //посимвольно
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader); //построчно
-
-                //тк string - иммутабельный мы используем StringBuilder и считываем json в Stringbuilder
-                StringBuilder stringBuilder = new StringBuilder();
-                String result;
-                do {
-                    result = bufferedReader.readLine();
-                    if (result != null) {
-                        stringBuilder.append(result);
-                    }
-                } while (result != null);
-
-                JSONObject jsonObject = new JSONObject(stringBuilder.toString());
-                String message = jsonObject.getString(KEY_MESSAGE);
-                String status = jsonObject.getString(KEY_STATUS);
-
-                return new DogImage(message, status);
-            }
-        });
+        return ApiFactory.getApiService().loadDogImage();
     }
 
 
